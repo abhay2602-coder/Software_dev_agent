@@ -1,0 +1,1049 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Agent Interface</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="{{ url_for('static', path='/css/style.css') }}" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #ffffff;
+            --sidebar-bg: #f7f7f8;
+            --main-bg: #ffffff;
+            --border-color: #e5e5e5;
+            --text-primary: #171717;
+            --text-secondary: #6b7280;
+            --accent-color: #3b82f6;
+            --accent-hover: #2563eb;
+            --font-primary: 'Inter', sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-primary);
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .app-container {
+            display: flex;
+            height: 100%;
+        }
+
+        /* --- Left Sidebar --- */
+        .left-sidebar {
+            width: 280px;
+            background-color: var(--sidebar-bg);
+            border-right: 1px solid var(--border-color);
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .sidebar-header {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .sidebar-section {
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .sidebar-section h3 {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .session-list, .file-tree {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .session-item, .file-item {
+            padding: 10px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .session-item:hover, .file-item:hover {
+            background-color: #edeef0;
+        }
+
+        .session-item.active {
+            background-color: var(--accent-color);
+            color: white;
+            font-weight: 500;
+        }
+        
+        .file-item {
+            color: var(--text-secondary);
+        }
+        
+        .file-item.selected {
+             background-color: #e0e8f9;
+             color: var(--text-primary);
+        }
+
+        /* --- Main Content --- */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .main-content-area {
+            flex: 1;
+            overflow-y: auto;
+            padding: 24px 48px;
+        }
+
+        .welcome-view {
+            text-align: center;
+            padding-top: 15vh;
+        }
+
+        .welcome-view h1 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 24px;
+        }
+
+        .agent-output-panel {
+            padding-bottom: 200px; /* Space for the input form */
+        }
+        
+        .agent-output-content {
+            font-family: monospace;
+            font-size: 14px;
+            line-height: 1.6;
+            white-space: pre-wrap; /* Ensures newlines and spaces are respected */
+            background-color: #f7f7f8;
+            border: 1px solid var(--border-color);
+            padding: 20px;
+            border-radius: 8px;
+            color: #333;
+            height: auto; /* Allow content to dictate height */
+            min-height: 100px; /* Ensure a visible box even if empty */
+            overflow-y: auto; /* Add scrollbar if content overflows vertically */
+        }
+
+        /* --- Input Form Area --- */
+        .input-area-container {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 24px 48px;
+            background: linear-gradient(to top, var(--main-bg) 70%, transparent 100%);
+            z-index: 10; /* Ensure it stays on top of content */
+        }
+        
+        .input-wrapper {
+            max-width: 800px;
+            margin: 0 auto;
+            background: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+        }
+
+        #requirements-input {
+            width: 100%;
+            border: none;
+            padding: 8px;
+            font-size: 16px;
+            font-family: var(--font-primary);
+            resize: none;
+            min-height: 50px;
+            outline: none;
+            background: transparent;
+        }
+        
+        .input-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 12px;
+        }
+
+        .agent-tabs {
+            display: flex;
+            gap: 8px;
+        }
+
+        .agent-tab {
+            padding: 8px 16px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        
+        .agent-tab:hover {
+            background-color: #f0f0f0;
+            border-color: #ccc;
+        }
+
+        .agent-tab.active {
+            background-color: var(--accent-color);
+            color: white;
+            border-color: var(--accent-color);
+        }
+        
+        .agent-tab.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            background-color: #f7f7f8;
+        }
+
+        #start-planning-btn {
+            padding: 10px 20px;
+            border: none;
+            background-color: var(--accent-color);
+            color: white;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        #start-planning-btn:hover:not(:disabled) {
+             background-color: var(--accent-hover);
+        }
+        
+        #start-planning-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        
+        /* Utility */
+        .hidden {
+            display: none !important;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <aside class="left-sidebar">
+            <div class="sidebar-header">AI Software Agent</div>
+            <div class="sidebar-section">
+                <h3>Projects</h3>
+                <div id="session-list" class="session-list">
+                    <div class="session-item active">
+                        <span>📝</span>
+                        <span>Web Task Manager</span>
+                    </div>
+                    </div>
+            </div>
+            <div class="sidebar-section">
+                <h3>Generated Files</h3>
+                <div id="file-tree" class="file-tree">
+                    <div class="file-item">
+                        <span>📄</span>
+                        <span>main.py</span>
+                    </div>
+                     <div class="file-item">
+                        <span>📄</span>
+                        <span>requirements.txt</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <div class="main-content-area">
+                <div id="welcome-view" class="welcome-view">
+                    <h1>What's on the agenda today?</h1>
+                </div>
+
+                <div id="agent-output-panel" class="agent-output-panel hidden">
+                    <div id="pm-agent-output" class="agent-output-content"></div>
+                    <div id="dev-agent-output" class="agent-output-content hidden"></div>
+                    <div id="qa-agent-output" class="agent-output-content hidden"></div>
+                </div>
+            </div>
+
+            <div class="input-area-container">
+                <div class="input-wrapper">
+                    <textarea id="requirements-input" placeholder="Ask anything, or describe your project requirements..."></textarea>
+                    <div class="input-actions">
+                         <div class="agent-tabs">
+                            <div class="agent-tab active" data-agent="pm">PM Agent</div>
+                            <div class="agent-tab" data-agent="dev">Dev Agent</div>
+                            <div class="agent-tab" data-agent="qa">QA Agent</div>
+                             <div class="agent-tab disabled">Ops Agent (soon)</div>
+                        </div>
+                        <button id="start-planning-btn">🚀 Start</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        class PlanningDashboard {
+    constructor() {
+        this.ws = null;
+        this.currentPlan = null;
+        this.reconnectInterval = 5000;
+        this.maxReconnectAttempts = 5;
+        this.reconnectAttempts = 0;
+        this.isConnecting = false;
+        this.projectFiles = {};
+        this.activeFile = 'welcome';
+        this.activeAgentTab = 'pm'; // Keep track of the currently active agent tab
+
+        this.initializeElements();
+        this.bindEvents();
+        this.connectWebSocket();
+        this.initializeMockFiles();
+        this.clearAgentOutputs(); // Clear outputs and show welcome on initial load
+    }
+
+    initializeElements() {
+        this.startBtn = document.getElementById('start-planning-btn');
+        this.requirementsInput = document.getElementById('requirements-input');
+        // Assuming progress related elements are present in your HTML,
+        // though not explicitly in the snippet you shared for brevity.
+        // this.progressFill = document.getElementById('progress-fill'); 
+        // this.progressText = document.getElementById('progress-text');
+        // this.logsContainer = document.getElementById('logs-container'); 
+        this.connectionStatus = document.getElementById('connection-status');
+        // this.planSummarySection = document.getElementById('plan-summary-section');
+        // this.tasksSection = document.getElementById('tasks-section');
+        // this.tasksGrid = document.getElementById('tasks-grid');
+        // this.summaryStats = document.getElementById('summary-stats');
+        this.fileTree = document.getElementById('file-tree');
+        // this.codeEditor = document.getElementById('code-editor'); // Assuming this exists for file viewing
+        // this.codeTabs = document.getElementById('code-tabs'); // Assuming this exists for code tabs if you add them
+        
+        // Agent output panels
+        this.welcomeView = document.getElementById('welcome-view');
+        this.agentOutputPanel = document.getElementById('agent-output-panel');
+        this.pmAgentOutput = document.getElementById('pm-agent-output');
+        this.devAgentOutput = document.getElementById('dev-agent-output');
+        this.qaAgentOutput = document.getElementById('qa-agent-output');
+
+        // Agent tabs
+        this.agentTabs = document.querySelectorAll('.agent-tab');
+
+        // Assuming status indicators also exist
+        // this.statusIndicators = {
+        //     analysis: document.getElementById('analysis-indicator'),
+        //     breakdown: document.getElementById('breakdown-indicator'),
+        //     dependencies: document.getElementById('dependencies-indicator'),
+        //     estimation: document.getElementById('estimation-indicator')
+        // };
+
+        // this.statusItems = {
+        //     analysis: document.getElementById('analysis-status'),
+        //     breakdown: document.getElementById('breakdown-status'),
+        //     dependencies: document.getElementById('dependencies-status'),
+        //     estimation: document.getElementById('estimation-status')
+        // };
+    }
+
+    /**
+     * Clears all agent output panels and shows the welcome view.
+     * Hides the main agent output panel container.
+     */
+    clearAgentOutputs() {
+        this.pmAgentOutput.textContent = '';
+        this.devAgentOutput.textContent = '';
+        this.qaAgentOutput.textContent = '';
+        
+        this.welcomeView.classList.remove('hidden');
+        this.agentOutputPanel.classList.add('hidden');
+    }
+
+    bindEvents() {
+        this.startBtn.addEventListener('click', () => this.startPlanning());
+
+        // Handle agent tab switching
+        this.agentTabs.forEach(tab => {
+            tab.addEventListener('click', (e) => {
+                if (e.target.classList.contains('disabled')) return;
+                
+                // Update tab states
+                this.agentTabs.forEach(t => t.classList.remove('active'));
+                e.target.classList.add('active');
+                
+                // Show corresponding output panel
+                this.activeAgentTab = e.target.dataset.agent; // Update active tab tracker
+                this.showAgentOutputPanel(this.activeAgentTab);
+            });
+        });
+
+        // Auto-resize textarea
+        this.requirementsInput.addEventListener('input', (e) => {
+            e.target.style.height = 'auto';
+            e.target.style.height = e.target.scrollHeight + 'px';
+        });
+    }
+
+    /**
+     * Shows the specified agent's output panel and hides others.
+     * Ensures the main agent output panel is visible.
+     * @param {string} agentType - The type of agent (e.g., 'pm', 'dev', 'qa').
+     */
+    showAgentOutputPanel(agentType) {
+        // Hide welcome view if visible
+        this.welcomeView.classList.add('hidden');
+        // Show the overall agent output container
+        this.agentOutputPanel.classList.remove('hidden');
+
+        // Hide all specific agent output content panels first
+        document.querySelectorAll('.agent-output-content').forEach(panel => {
+            panel.classList.add('hidden');
+        });
+        // Then show the active one
+        const targetPanel = document.getElementById(`${agentType}-agent-output`);
+        if (targetPanel) {
+            targetPanel.classList.remove('hidden');
+            // Scroll to bottom when panel is made visible
+            targetPanel.scrollTop = targetPanel.scrollHeight;
+        }
+    }
+
+
+    initializeMockFiles() {
+        this.projectFiles = {
+            'welcome': {
+                name: 'Welcome',
+                content: 'Welcome to AI Planning Agent\n\nYour generated code files will appear here.\nClick on files in the left panel to view their contents.',
+                type: 'text',
+                path: 'welcome' // Add path for consistency
+            }
+        };
+        this.renderFileTree(); // Render initial state
+        this.renderCodeContent('welcome'); // Show welcome content by default
+    }
+
+    async fetchInitialFiles() {
+        try {
+            const response = await fetch('/list_generated_files');
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            const data = await response.json();
+            
+            if (data.status === 'success' && data.files) {
+                this.addLogMessage('Fetched existing project files.', 'info');
+                // Clear all except welcome
+                this.projectFiles = { 'welcome': this.projectFiles['welcome'] }; 
+                
+                const processEntries = (entries) => {
+                    for (const entry of entries) {
+                        if (entry.type === 'file') {
+                            // Store full path but use name for display initially if needed, or full path.
+                            // The `file_generated` event will give `file_name` as the full path.
+                            this.projectFiles[entry.path] = {
+                                name: entry.name, // The actual file name (e.g., "main.py")
+                                path: entry.path, // The full relative path (e.g., "dev_outputs/some_id_title/main.py")
+                                content: `// Content for ${entry.name} will be loaded on click.`,
+                                type: 'code' // Assume code for now, can refine later
+                            };
+                        } else if (entry.type === 'directory' && entry.children) {
+                            processEntries(entry.children);
+                        }
+                    }
+                };
+                
+                processEntries(data.files);
+                this.renderFileTree();
+            }
+        } catch (error) {
+            console.error('Error fetching initial file list:', error);
+            this.addLogMessage('Could not load existing files from the server.', 'error');
+        }
+    }
+
+    async fetchFileContent(filePath) {
+        if (!this.ws || this.ws.readyState !== WebSocket.OPEN) {
+            this.addLogMessage('Cannot fetch file content. WebSocket is not connected.', 'error');
+            return;
+        }
+        
+        if (filePath === 'welcome') {
+            this.renderCodeContent('welcome');
+            return;
+        }
+
+        if (this.codeEditor) {
+            this.codeEditor.innerHTML = `<div class="code-placeholder">Loading ${filePath}...</div>`;
+        }
+        
+        const payload = {
+            type: 'request_file_content',
+            file_path: filePath
+        };
+        this.ws.send(JSON.stringify(payload));
+    }
+
+    connectWebSocket() {
+        if (this.isConnecting) return;
+
+        this.isConnecting = true;
+        const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+        const wsUrl = `${protocol}//${window.location.host}/ws`;
+
+        try {
+            this.ws = new WebSocket(wsUrl);
+
+            this.ws.onopen = () => {
+                console.log('WebSocket connected');
+                this.reconnectAttempts = 0;
+                this.isConnecting = false;
+                this.updateConnectionStatus(true);
+                this.addLogMessage('Connected to planning server', 'info');
+                this.fetchInitialFiles(); // Fetch existing files after connection
+            };
+
+            this.ws.onmessage = (event) => {
+                try {
+                    const data = JSON.parse(event.data);
+                    this.handleMessage(data);
+                } catch (error) {
+                    console.error('Failed to parse WebSocket message:', error);
+                }
+            };
+
+            this.ws.onclose = (event) => {
+                console.log('WebSocket disconnected', event.code, event.reason);
+                this.isConnecting = false;
+                this.updateConnectionStatus(false);
+                if (event.code !== 1000) { // 1000 is normal closure
+                    this.attemptReconnect();
+                }
+            };
+
+            this.ws.onerror = (error) => {
+                console.error('WebSocket error:', error);
+                this.isConnecting = false;
+                this.updateConnectionStatus(false);
+            };
+
+        } catch (error) {
+            console.error('Failed to connect WebSocket:', error);
+            this.isConnecting = false;
+            this.updateConnectionStatus(false);
+            this.attemptReconnect();
+        }
+    }
+
+    attemptReconnect() {
+        if (this.reconnectAttempts < this.maxReconnectAttempts && !this.isConnecting) {
+            this.reconnectAttempts++;
+            console.log(`Attempting to reconnect... (${this.reconnectAttempts}/${this.maxReconnectAttempts})`);
+            this.addLogMessage(`Connection lost. Attempting to reconnect... (${this.reconnectAttempts}/${this.maxReconnectAttempts})`, 'warning');
+
+            setTimeout(() => {
+                this.connectWebSocket();
+            }, this.reconnectInterval);
+        } else if (!this.isConnecting) {
+            this.addLogMessage('Failed to connect to server after multiple attempts. Please refresh the page.', 'error');
+        }
+    }
+
+    updateConnectionStatus(connected) {
+        if (!this.connectionStatus) return;
+        if (connected) {
+            this.connectionStatus.textContent = '🟢 Connected';
+            this.connectionStatus.className = 'connection-status connected';
+        } else {
+            this.connectionStatus.textContent = '🔴 Disconnected';
+            this.connectionStatus.className = 'connection-status disconnected';
+        }
+    }
+
+    handleMessage(data) {
+        console.log("Received WS message:", data); // Log all incoming messages for debugging
+        switch (data.type) {
+            case 'planning_started':
+                this.handlePlanningStarted(data);
+                break;
+            case 'agent_output': // For PM agent, or non-streaming output from others
+                this.handleAgentOutput(data);
+                break;
+            case 'pm_agent_llm_streaming_chunk': // Assuming PM Agent also streams
+                this.handlePMAgentStreamingChunk(data);
+                break;
+            case 'dev_agent_llm_streaming_chunk':
+                this.handleDevAgentStreamingChunk(data);
+                break;
+            case 'llm_response_complete': // Signal that an LLM stream has ended
+                this.handleLLMResponseComplete(data);
+                break;
+            case 'progress':
+                this.updateProgress(data);
+                break;
+            case 'planning_completed':
+                this.handlePlanningCompleted(data);
+                break;
+            case 'task_status_update': // Renamed from task_updated for clarity with new Python code
+                this.handleTaskStatusUpdate(data);
+                break;
+            case 'file_generated':
+                this.handleFileGenerated(data);
+                break;
+            case 'file_content': // This is the response to request_file_content
+            case 'file_content_response': // Both can be used, ensuring consistency
+                if (data.file_path && data.content !== undefined) { // Check for undefined to allow empty content
+                    // Ensure the file object exists before trying to assign content
+                    if (!this.projectFiles[data.file_path]) {
+                        this.projectFiles[data.file_path] = {
+                            name: data.file_path.split('/').pop(), // Extract name from path
+                            path: data.file_path,
+                            type: 'code', // Default to code if not specified
+                            content: ''
+                        };
+                    }
+                    this.projectFiles[data.file_path].content = data.content;
+                    // Only render if this is the currently selected file
+                    if (this.activeFile === data.file_path) {
+                        this.renderCodeContent(data.file_path);
+                    }
+                } else if (data.error) {
+                     this.addLogMessage(`Error fetching file: ${data.error}`, 'error');
+                     if (this.activeFile === data.file_path && this.codeEditor) {
+                         this.codeEditor.innerHTML = `<div class="code-placeholder">Error: ${this.escapeHtml(data.error)}</div>`;
+                     }
+                }
+                break;
+            case 'error':
+                this.handleError(data);
+                break;
+            default:
+                this.addLogMessage(`Received: ${data.message || JSON.stringify(data)}`, 'info');
+        }
+    }
+
+    /**
+     * Handles general agent output (e.g., from PM agent planning, not streaming code).
+     * @param {object} data - The message data, containing agent_type and content.
+     */
+    handleAgentOutput(data) {
+        // This is for existing `agent_output` type, potentially for PM agent's non-streaming parts.
+        const agentType = data.agent_type.toLowerCase();
+        const outputPanel = document.getElementById(`${agentType}-agent-output`);
+        
+        if (outputPanel) {
+            // Ensure the correct tab is active and its panel is visible
+            this.activateAgentTab(agentType);
+            
+            // Append new content
+            outputPanel.textContent += data.content;
+            outputPanel.scrollTop = outputPanel.scrollHeight; // Auto-scroll
+        }
+        // No need to hide welcome view here, showAgentOutputPanel handles it.
+    }
+
+    /**
+     * Handles streaming chunks specifically from the PM Agent.
+     * @param {object} data - The message data, containing content.
+     */
+    handlePMAgentStreamingChunk(data) {
+        const outputPanel = this.pmAgentOutput;
+        if (outputPanel) {
+            this.activateAgentTab('pm');
+            outputPanel.textContent += data.content;
+            outputPanel.scrollTop = outputPanel.scrollHeight;
+        }
+    }
+
+    /**
+     * Handles streaming chunks specifically from the Dev Agent.
+     * @param {object} data - The message data, containing task_id and content.
+     */
+    handleDevAgentStreamingChunk(data) {
+        const outputPanel = this.devAgentOutput;
+        if (outputPanel) {
+            this.activateAgentTab('dev'); // Ensure Dev Agent tab is active
+            outputPanel.textContent += data.content;
+            outputPanel.scrollTop = outputPanel.scrollHeight; // Auto-scroll to show new content
+        }
+    }
+
+    /**
+     * Handles the signal that an LLM response stream has completed.
+     * @param {object} data - The message data.
+     */
+    handleLLMResponseComplete(data) {
+        this.addLogMessage(`LLM response stream completed for ${data.agent_id || 'an agent'} task ${data.task_id || ''}.`, 'info');
+        // You might want to add a final newline or a "Done" message to the output panel
+        // For example, if data.agent_id is 'dev_agent':
+        // if (data.agent_id === 'dev_agent') {
+        //     this.devAgentOutput.textContent += '\n\n[Code generation complete.]';
+        //     this.devAgentOutput.scrollTop = this.devAgentOutput.scrollHeight;
+        // }
+    }
+
+    /**
+     * Activates the specified agent tab and shows its corresponding output panel.
+     * @param {string} agentType - The type of agent (e.g., 'pm', 'dev', 'qa').
+     */
+    activateAgentTab(agentType) {
+        this.agentTabs.forEach(tab => {
+            if (tab.dataset.agent === agentType) {
+                tab.classList.add('active');
+            } else {
+                tab.classList.remove('active');
+            }
+        });
+        this.activeAgentTab = agentType;
+        this.showAgentOutputPanel(agentType);
+    }
+
+    startPlanning() {
+        if (!this.ws || this.ws.readyState !== WebSocket.OPEN) {
+            this.addLogMessage('Failed to initiate planning. Please check the connection.', 'error');
+            alert('Failed to send planning request. Ensure you are connected to the server.');
+            return;
+        }
+
+        // Clear all relevant UI sections before starting a new session
+        // this.clearLogs(); // Uncomment if you have a logs container
+        // this.resetProgress(); // Uncomment if you have progress bars
+        // this.hideResults(); // Uncomment if you have result sections to hide
+        this.clearProjectFiles(); // Clear generated files from previous sessions
+        this.clearAgentOutputs(); // Clear all agent output content
+
+        this.startBtn.disabled = true;
+        this.startBtn.innerHTML = '⏳ Planning...';
+
+        const requirements = this.requirementsInput.value.trim();
+
+        if (!requirements) {
+            this.addLogMessage('Project requirements are required.', 'error');
+            alert('Please enter project requirements.');
+            this.startBtn.disabled = false;
+            this.startBtn.innerHTML = '🚀 Start';
+            return;
+        }
+
+        const payload = {
+            type: 'start_planning',
+            requirements: requirements
+        };
+
+        this.ws.send(JSON.stringify(payload));
+        this.addLogMessage('Planning request sent to server.', 'info');
+        
+        // After sending request, activate PM Agent tab and show its output panel
+        this.activateAgentTab('pm');
+    }
+
+    handlePlanningStarted(data) {
+        this.addLogMessage(data.message, 'info');
+        // Initial message, clear PM output if it's not already
+        this.pmAgentOutput.textContent = ''; 
+    }
+
+    updateProgress(data) {
+        // (No change) Assumes elements exist as per your original code
+        if(this.progressFill) this.progressFill.style.width = `${data.progress}%`;
+        if(this.progressText) this.progressText.textContent = data.message;
+        this.addLogMessage(`[${data.progress}%] ${data.message}`, 'info');
+
+        // Update status indicators
+        const steps = ['analysis', 'breakdown', 'dependencies', 'estimation', 'generation'];
+        const currentStepIndex = steps.indexOf(data.step);
+
+        for (let i = 0; i < steps.length; i++) {
+            const step = steps[i];
+            if (this.statusItems && this.statusItems[step]) { // Check for existence
+                this.statusItems[step].classList.remove('active', 'completed');
+                this.statusIndicators[step].className = 'status-indicator';
+                
+                if (i < currentStepIndex) {
+                    this.statusItems[step].classList.add('completed');
+                    this.statusIndicators[step].classList.add('completed');
+                } else if (i === currentStepIndex) {
+                    this.statusItems[step].classList.add('active');
+                    this.statusIndicators[step].classList.add('pending');
+                }
+            }
+        }
+    }
+
+    handlePlanningCompleted(data) {
+        this.currentPlan = data.plan;
+        this.updateProgress({ progress: 100, message: data.message, step: 'generation' });
+        this.addLogMessage('✅ Planning successfully completed!', 'info');
+        // this.renderPlan(this.currentPlan); // Uncomment if you want to render plan summary
+        this.startBtn.disabled = false;
+        this.startBtn.innerHTML = '🚀 Start';
+        // if(this.planSummarySection) this.planSummarySection.style.display = '';
+        // if(this.tasksSection) this.tasksSection.style.display = '';
+    }
+
+    /**
+     * Handles task status updates (e.g., when a Dev Agent task completes).
+     * @param {object} data - The message data, containing task_id, status, and message.
+     */
+    handleTaskStatusUpdate(data) {
+        this.addLogMessage(`Task Status: [${data.status.toUpperCase()}] ${data.message}`, 'info');
+        // If the task output directory or main file path is provided, you might do something with it.
+        // E.g., if (data.output_directory) { console.log("Task output in:", data.output_directory); }
+        // If you're displaying tasks in a grid, you would update their status here.
+        if (this.currentPlan && this.currentPlan.tasks) {
+            const taskToUpdate = this.currentPlan.tasks.find(t => t.id === data.task_id);
+            if (taskToUpdate) {
+                taskToUpdate.status = data.status;
+                // this.renderPlan(this.currentPlan); // Re-render tasks to reflect status change
+            }
+        }
+    }
+
+    handleFileGenerated(data) {
+        // `data.file_name` comes as the full path (e.g., "dev_outputs/some_id_title/main.py")
+        // `data.content` is the full file content
+        // `data.file_type` (e.g., "python", "json")
+        const filePath = data.file_name;
+        const fileName = filePath.split('/').pop(); // Extract just the file name from the path
+
+        this.projectFiles[filePath] = {
+            name: fileName,
+            path: filePath,
+            content: data.content,
+            type: data.file_type || 'text'
+        };
+        this.renderFileTree();
+        this.addLogMessage(`File generated: ${filePath}`, 'info');
+    }
+
+    handleError(data) {
+        this.addLogMessage(data.message || data.error || 'Unknown error', 'error');
+        this.startBtn.disabled = false;
+        this.startBtn.innerHTML = '🚀 Start';
+    }
+
+    // Original handleFileContent and related functions are retained as they seem to work for loading
+    // existing files. The 'file_content_response' handles the actual content delivery.
+    // handleFileContent (original from your code) will likely be superseded by file_content_response.
+    // I've consolidated logic under file_content_response in handleMessage.
+
+    clearLogs() {
+        if(this.logsContainer) this.logsContainer.innerHTML = '';
+    }
+
+    resetProgress() {
+        // (No change) Assumes elements exist
+        if(this.progressFill) this.progressFill.style.width = '0%';
+        if(this.progressText) this.progressText.textContent = 'Ready to start planning';
+        if(this.statusIndicators) Object.values(this.statusIndicators).forEach(ind => ind ? ind.className = 'status-indicator' : null);
+        if(this.statusItems) Object.values(this.statusItems).forEach(item => item ? item.className = 'status-item' : null);
+    }
+
+    hideResults() {
+        // (No change) Assumes elements exist
+        if(this.planSummarySection) this.planSummarySection.style.display = 'none';
+        if(this.tasksSection) this.tasksSection.style.display = 'none';
+    }
+
+    clearProjectFiles() {
+        this.projectFiles = { 'welcome': this.projectFiles['welcome'] }; // Reset to only the welcome file
+        this.renderFileTree(); // Re-render to clear display
+        this.renderCodeContent('welcome'); // Show welcome content
+        this.activeFile = 'welcome'; // Set active file back to welcome
+    }
+
+    addLogMessage(message, type = 'info') {
+        // (No change) Assumes logsContainer exists
+        if (!this.logsContainer) return;
+        const entry = document.createElement('div');
+        entry.className = `log-entry ${type}`;
+        entry.textContent = message;
+        this.logsContainer.appendChild(entry);
+        this.logsContainer.scrollTop = this.logsContainer.scrollHeight;
+    }
+
+    renderPlan(plan) {
+        // (No change) Assumes elements exist
+        if (!plan || !this.summaryStats) return;
+        this.summaryStats.innerHTML = '';
+        const stats = [
+            { label: 'Plan ID', value: plan.id },
+            { label: 'Title', value: plan.title },
+            { label: 'Tasks', value: plan.tasks ? plan.tasks.length : 0 }
+        ];
+        stats.forEach(stat => {
+            const statDiv = document.createElement('div');
+            statDiv.className = 'stat-item';
+            statDiv.innerHTML = `<div class="stat-value">${stat.value}</div><div class="stat-label">${stat.label}</div>`;
+            this.summaryStats.appendChild(statDiv);
+        });
+
+        if (!this.tasksGrid) return;
+        this.tasksGrid.innerHTML = '';
+        if (plan.tasks && plan.tasks.length) {
+            plan.tasks.forEach(task => {
+                const card = document.createElement('div');
+                card.className = `task-card ${task.status ? task.status.toLowerCase().replace('_', '-') : ''}`;
+                card.innerHTML = `
+                    <div class="task-header">
+                        <div class="task-title">${task.title}</div>
+                        <div class="task-priority ${task.priority >= 8 ? 'high' : task.priority >= 5 ? 'medium' : 'low'}">${task.priority}</div>
+                    </div>
+                    <div class="task-description">${task.description}</div>
+                    <div class="task-meta">
+                        <span>Complexity: ${task.complexity}</span>
+                        <span>Agent: ${task.agent_type}</span>
+                        <span>Status: ${task.status}</span>
+                    </div>
+                `;
+                this.tasksGrid.appendChild(card);
+            });
+        }
+    }
+
+    renderFileTree() {
+        if(!this.fileTree) return;
+        this.fileTree.innerHTML = '';
+        // Sort files alphabetically by path
+        const files = Object.values(this.projectFiles).sort((a, b) => {
+            if (a.path === 'welcome') return -1; // Keep welcome at the top if it exists
+            if (b.path === 'welcome') return 1;
+            return a.path.localeCompare(b.path);
+        });
+
+        if (files.length <= 1 && this.projectFiles['welcome']) { 
+            // If only welcome is left, display a message or just welcome itself
+            const welcomeItem = document.createElement('div');
+            welcomeItem.className = `file-item${this.activeFile === 'welcome' ? ' selected' : ''}`;
+            welcomeItem.innerHTML = `<span>📄</span> <span>Welcome</span>`;
+            welcomeItem.onclick = () => {
+                this.activeFile = 'welcome';
+                this.renderCodeContent('welcome');
+                this.renderFileTree();
+            };
+            this.fileTree.appendChild(welcomeItem);
+            if (files.length === 1 && files[0].path === 'welcome') {
+                const noFilesMsg = document.createElement('div');
+                noFilesMsg.className = "file-item";
+                noFilesMsg.style = "cursor: default; color: var(--text-secondary);";
+                noFilesMsg.textContent = "No other files generated yet.";
+                this.fileTree.appendChild(noFilesMsg);
+            }
+            return;
+        }
+        
+        files.forEach(fileObj => {
+            // Don't show the initial welcome message in the main list if there are other files
+            if (fileObj.path === 'welcome' && files.length > 1) {
+                // If you want 'Welcome' always visible even with other files, you can modify this.
+                // For now, it will be at the top implicitly by sorting or handled separately.
+                return; 
+            }
+
+            const item = document.createElement('div');
+            const filePath = fileObj.path;
+            item.className = `file-item${filePath === this.activeFile ? ' selected' : ''}`;
+            
+            // Adding icons for files. Display fileObj.name (e.g., "main.py") not the full path.
+            item.innerHTML = `<span>📄</span> <span>${this.escapeHtml(fileObj.name)}</span>`; 
+            
+            item.onclick = () => {
+                this.activeFile = filePath;
+                this.fetchFileContent(filePath); // Fetch content on click
+                this.renderFileTree(); // Re-render to show selection
+            };
+            this.fileTree.appendChild(item);
+        });
+    }
+
+    renderCodeContent(file) {
+        if(!this.codeEditor) return; // Ensure codeEditor exists
+        const fileObj = this.projectFiles[file];
+        if (!fileObj) {
+            this.codeEditor.innerHTML = '<div class="code-placeholder">File not found.</div>';
+            return;
+        }
+        // Ensure the content is displayed within <pre><code> for proper formatting
+        this.codeEditor.innerHTML = `<pre><code class="code-content">${this.escapeHtml(fileObj.content)}</code></pre>`;
+    }
+
+    escapeHtml(text) {
+        if (text === null || text === undefined) return ''; // Handle null/undefined
+        return String(text).replace(/&/g, '&amp;')
+                   .replace(/</g, '&lt;')
+                   .replace(/>/g, '&gt;')
+                   .replace(/"/g, '&quot;')
+                   .replace(/'/g, '&#39;');
+    }
+}
+
+// Instantiate the dashboard
+window.dashboardInstance = new PlanningDashboard();
+
+// Utility functions for code actions (remain unchanged)
+function copyCode() {
+    const editor = document.getElementById('code-editor');
+    if(!editor) {
+        alert('Code editor not found.');
+        return;
+    }
+    const text = editor.querySelector('code.code-content');
+    if (!text) {
+        alert('No code content to copy.');
+        return;
+    }
+    navigator.clipboard.writeText(text.textContent).then(() => {
+        // console.log('Code copied to clipboard!');
+        // alert('Code copied to clipboard!'); // Optionally, remove this alert for less intrusive UX
+    }).catch(err => {
+        console.error('Failed to copy code: ', err);
+        alert('Failed to copy code. Please copy manually.');
+    });
+}
+
+function downloadFile() {
+    const dashboard = window.dashboardInstance;
+    if (!dashboard) return;
+    const fileObj = dashboard.projectFiles[dashboard.activeFile];
+    if (!fileObj || fileObj.path === 'welcome') {
+        alert('No active file selected for download or cannot download welcome message.');
+        return;
+    }
+    const blob = new Blob([fileObj.content], { type: 'text/plain' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = fileObj.name; // Use fileObj.name for download filename
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(link.href); // Clean up the URL object
+}
+
+// Initialize dashboard
+window.dashboardInstance = new PlanningDashboard();
+    </script>
+    <script src="{{ url_for('static', path='/js/websocket.js') }}"></script>
+</body>
+</html>
