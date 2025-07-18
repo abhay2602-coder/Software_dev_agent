@@ -188,7 +188,7 @@ async def websocket_endpoint(websocket: WebSocket):
 
                                 # Pass the WebSocket object to the DevAgent's execute_task
                                 # so it can stream directly back to this client.
-                                updated_task = await dev_agent.execute_task(task, websocket) 
+                                updated_task = await dev_agent.execute_task(task) 
                                 
                                 # Once DevAgent is done, update the plan and notify
                                 if planner_agent.current_plan:

@@ -1,0 +1,53 @@
+{
+  "id": "c3a3ae65-ed2f-4d01-9c37-f4ed4f1df60c",
+  "title": "Collaborative Real-time Document Editor (Google Docs Clone)",
+  "description": "A comprehensive project plan to build a web-based, real-time collaborative document editor, similar to Google Docs. The project focuses on core functionalities including user authentication, document management (CRUD), rich text editing, and real-time multi-user collaboration. The plan covers the entire software development lifecycle, from initial analysis and design to development, quality assurance, and deployment.",
+  "tasks": [
+    {
+      "id": "task_001",
+      "title": "Finalize MVP Requirements & Scope Definition",
+      "description": "Thoroughly analyze and document the precise features for the Minimum Viable Product (MVP). Create a formal scope document. Acceptance Criteria: - A finalized list of features for the MVP is signed off. - User stories for each feature are created. - Out-of-scope features are explicitly listed.",
+      "priority": 10,
+      "status": "failed",
+      "dependencies": [],
+      "estimated_hours": 16.0,
+      "complexity": "medium",
+      "agent_type": "dev_agent",
+      "created_at": "2025-07-18T17:39:14.261052",
+      "metadata": {}
+    },
+    {
+      "id": "task_002",
+      "title": "Technology Stack Selection & Feasibility",
+      "description": "Evaluate and decide on the final technology stack for frontend, backend, database, and real-time communication. Assess the feasibility of real-time collaboration with the chosen stack. Acceptance Criteria: - Frontend framework (e.g., React, Vue) selected. - Backend framework (e.g., Node.js/Express, Django) selected. - Database system (e.g., PostgreSQL, MongoDB) selected. - Real-time engine (e.g., WebSockets, Socket.IO) selected. - A feasibility report is documented.",
+      "priority": 10,
+      "status": "failed",
+      "dependencies": [
+        "task_001"
+      ],
+      "estimated_hours": 8.0,
+      "complexity": "medium",
+      "agent_type": "dev_agent",
+      "created_at": "2025-07-18T17:39:18.332076",
+      "metadata": {}
+    },
+    {
+      "id": "task_003",
+      "title": "System Architecture & Data Model Design",
+      "description": "Design the high-level system architecture, including service boundaries, and create a detailed database schema. Acceptance Criteria: - A system architecture diagram is created. - Database schema with all tables, columns, and relationships is designed. - Data models for users, documents, and permissions are defined.",
+      "priority": 10,
+      "status": "failed",
+      "dependencies": [
+        "task_002"
+      ],
+      "estimated_hours": 24.0,
+      "complexity": "complex",
+      "agent_type": "dev_agent",
+      "created_at": "2025-07-18T17:39:23.288962",
+      "metadata": {}
+    }
+  ],
+  "created_at": "2025-07-18T17:39:14.260957",
+  "total_estimated_hours": null,
+  "complexity_distribution": {}
+}

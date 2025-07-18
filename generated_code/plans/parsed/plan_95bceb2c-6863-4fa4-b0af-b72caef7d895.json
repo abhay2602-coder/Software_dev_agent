@@ -1,0 +1,38 @@
+{
+  "id": "95bceb2c-6863-4fa4-b0af-b72caef7d895",
+  "title": "Collaborative Real-time Document Editor (Google Docs Clone)",
+  "description": "This project plan outlines the development of a web-based, real-time collaborative document editor, similar in core functionality to Google Docs. The key deliverables include a robust backend with WebSocket support for real-time synchronization, a rich-text frontend editor, user authentication, document management, and sharing capabilities. The plan is structured in five phases: Analysis, Design, Development, Quality Assurance, and Deployment, ensuring a scalable, secure, and maintainable final product.",
+  "tasks": [
+    {
+      "id": "task_001",
+      "title": "Define MVP and Extended Feature Set",
+      "description": "Conduct workshops with stakeholders to finalize the Minimum Viable Product (MVP) scope and prioritize future features. Acceptance Criteria: - A signed-off document detailing MVP features (real-time editing, auth, doc CRUD). - A prioritized backlog of post-MVP features (comments, version history, templates).",
+      "priority": 10,
+      "status": "failed",
+      "dependencies": [],
+      "estimated_hours": 16.0,
+      "complexity": "medium",
+      "agent_type": "dev_agent",
+      "created_at": "2025-07-18T17:39:29.139209",
+      "metadata": {}
+    },
+    {
+      "id": "task_005",
+      "title": "UI/UX Wireframing and Prototyping",
+      "description": "Create wireframes and interactive prototypes for all major user interfaces, including the dashboard, editor view, and login/registration pages. Acceptance Criteria: - Wireframes for all screens are completed. - A clickable prototype demonstrating the main user flow is available. - Design components are identified.",
+      "priority": 8,
+      "status": "in_progress",
+      "dependencies": [
+        "task_001"
+      ],
+      "estimated_hours": 24.0,
+      "complexity": "medium",
+      "agent_type": "dev_agent",
+      "created_at": "2025-07-18T17:39:33.227658",
+      "metadata": {}
+    }
+  ],
+  "created_at": "2025-07-18T17:39:29.139011",
+  "total_estimated_hours": null,
+  "complexity_distribution": {}
+}

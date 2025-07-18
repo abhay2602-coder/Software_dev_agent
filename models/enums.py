@@ -5,6 +5,7 @@ class TaskStatus(Enum):
     IN_PROGRESS = "in_progress"
     COMPLETED = "completed"
     FAILED = "failed"
+    KIPPED = "skipped"
 
 class TaskPriority(Enum):
     LOW = 1
