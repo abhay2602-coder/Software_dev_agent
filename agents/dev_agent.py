@@ -545,4 +545,4 @@ Please provide a complete, production-ready implementation that follows enterpri
             except Exception as e:
                 logger.error(f"DevAgent: Failed to save updated plan {plan_file.name}: {e}", exc_info=True)
 
-# dev_agent = DevAgent()
+dev_agent = DevAgent()

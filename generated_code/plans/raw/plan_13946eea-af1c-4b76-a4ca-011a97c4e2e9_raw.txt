@@ -1,0 +1,538 @@
+```json
+{
+  "plan_title": "Comprehensive E-Commerce Shopping App Development Plan",
+  "plan_description": "This plan outlines the end-to-end development of a modern, full-featured e-commerce shopping application. The project includes user authentication, a product catalog with search and filtering, a shopping cart, a secure checkout process with payment integration, and an admin panel for managing products and orders. The plan is structured in five phases: Analysis, Design, Development, Quality Assurance, and Deployment, ensuring a robust, scalable, and secure final product.",
+  "tasks": [
+    {
+      "id": "task_001",
+      "title": "Project Analysis: Requirements Gathering & Scoping",
+      "description": "Conduct workshops with stakeholders to define and document detailed functional and non-functional requirements. - Acceptance Criteria: A finalized requirements document is signed off by all stakeholders. Project scope is clearly defined, including MVP features and future enhancements.",
+      "priority": 10,
+      "dependencies": [],
+      "estimated_hours": 16,
+      "complexity": "medium",
+      "agent_type": "dev_agent"
+    },
+    {
+      "id": "task_002",
+      "title": "Project Analysis: Technical Feasibility Assessment",
+      "description": "Analyze requirements to assess technical viability and identify potential challenges. - Acceptance Criteria: A report is produced detailing the feasibility of key features. Potential technical roadblocks are identified.",
+      "priority": 10,
+      "dependencies": ["task_001"],
+      "estimated_hours": 8,
+      "complexity": "medium",
+      "agent_type": "dev_agent"
+    },
+    {
+      "id": "task_003",
+      "title": "Project Analysis: Technology Stack Selection",
+      "description": "Select the optimal technology stack for the backend, frontend, database, and deployment environments. - Acceptance Criteria: A document justifying the choice of technologies (e.g., Node.js/React/PostgreSQL/AWS) is created. The development team agrees on the chosen stack.",
+      "priority": 10,
+      "dependencies": ["task_002"],
+      "estimated_hours": 6,
+      "complexity": "medium",
+      "agent_type": "dev_agent"
+    },
+    {
+      "id": "task_004",
+      "title": "Project Analysis: Risk Assessment & Mitigation Planning",
+      "description": "Identify potential project risks (technical, resource, timeline) and create a mitigation plan. - Acceptance Criteria: A risk register is created with identified risks, their probability, impact, and a corresponding mitigation strategy.",
+      "priority": 8,
+      "dependencies": ["task_001"],
+      "estimated_hours": 8,
+      "complexity": "medium",
+      "agent_type": "dev_agent"
+    },
+    {
+      "id": "task_005",
+      "title": "Design: High-Level System Architecture Design",
+      "description": "Create a high-level diagram and documentation of the overall system architecture (microservices vs. monolith, service communication, etc.). - Acceptance Criteria: An architecture diagram is finalized. Key architectural decisions are documented and approved.",
+      "priority": 10,
+      "dependencies": ["task_003"],
+      "estimated_hours": 24,
+      "complexity": "complex",
+      "agent_type": "dev_agent"
+    },
+    {
+      "id": "task_006",
+      "title": "Design: Database Schema Design & Modeling",
+      "description": "Design the relational database schema, including tables, columns, relationships, and constraints for all application data. - Acceptance Criteria: An Entity-Relationship Diagram (ERD) is created. SQL schema definitions are written and peer-reviewed.",
+      "priority": 10,
+      "dependencies": ["task_005"],
+      "estimated_hours": 16,
+      "complexity": "complex",
+      "agent_type": "dev_agent"
+    },
+    {
+      "id": "task_007",
+      "title": "Design: API Contract Design (OpenAPI/Swagger)",
+      "description": "Define all API endpoints, request/response payloads, and status codes using the OpenAPI specification. - Acceptance Criteria: A complete OpenAPI/Swagger specification is published. The specification is reviewed by both frontend and backend teams.",
+      "priority": 8,
+      "dependencies": ["task_006"],
+      "estimated_hours": 20,
+      "complexity": "medium",
+      "agent_type": "dev_agent"
+    },
+    {
+      "id": "task_008",
+      "title": "Design: UI/UX Wireframing & Prototyping",
+      "description": "Create low-fidelity wireframes and interactive prototypes for all major user flows (registration, checkout, etc.). - Acceptance Criteria: Wireframes for all screens are completed. An interactive prototype is available for stakeholder review.",
+      "priority": 8,
+      "dependencies": ["task_001"],
+      "estimated_hours": 32,
+      "complexity": "medium",
+      "agent_type": "dev_agent"
+    },
+    {
+      "id": "task_009",
+      "title": "Design: Security Architecture Planning",
+      "description": "Define the security strategy, including authentication/authorization, data encryption, and protection against common vulnerabilities (OWASP Top 10). - Acceptance Criteria: A security design document is created. All data handling and authentication mechanisms are defined.",
+      "priority": 10,
+      "dependencies": ["task_005"],
+      "estimated_hours": 16,
+      "complexity": "expert",
+      "agent_type": "dev_agent"
+    },
+    {
+      "id": "task_010",
+      "title": "Design: Final UI/UX Design System",
+      "description": "Develop a high-fidelity design system including color palettes, typography, components, and final screen mockups based on wireframes. - Acceptance Criteria: A complete design system is delivered in a tool like Figma. All app screens are designed.",
+      "priority": 5,
+      "dependencies": ["task_008"],
+      "estimated_hours": 40,
+      "complexity": "complex",
+      "agent_type": "dev_agent"
+    },
+    {
+      "id": "task_011",
+      "title": "Dev: Backend Project Scaffolding & Setup",
+      "description": "Initialize the backend repository, set up the framework (e.g., Express.js), logging, environment variables, and basic project structure. - Acceptance Criteria: A new git repository is created. The application can run locally and returns a 'hello world' response.",
+      "priority": 8,
+      "dependencies": ["task_005"],
+      "estimated_hours": 8,
+      "complexity": "simple",
+      "agent_type": "dev_agent"
+    },
+    {
+      "id": "task_012",
+      "title": "Dev: Frontend Project Scaffolding & Setup",
+      "description": "Initialize the frontend repository (e.g., Create React App), set up state management, routing, and component structure. - Acceptance Criteria: A new git repository is created. The base frontend application runs in a browser.",
+      "priority": 8,
+      "dependencies": ["task_010"],
+      "estimated_hours": 12,
+      "complexity": "medium",
+      "agent_type": "dev_agent"
+    },
+    {
+      "id": "task_013",
+      "title": "Dev: Implement Database Schema & Migrations",
+      "description": "Use a migration tool (e.g., TypeORM, Alembic) to implement the designed database schema. - Acceptance Criteria: Migration scripts are written for all tables. The database can be created from scratch using the scripts.",
+      "priority": 10,
+      "dependencies": ["task_006", "task_011"],
+      "estimated_hours": 12,
+      "complexity": "medium",
+      "agent_type": "dev_agent"
+    },
+    {
+      "id": "task_014",
+      "title": "Dev: User Model & Authentication System (JWT)",
+      "description": "Implement user registration, password hashing (bcrypt), and login logic that issues JSON Web Tokens (JWT). - Acceptance Criteria: Users can be created in the database with hashed passwords. Successful login attempts return a valid JWT.",
+      "priority": 10,
+      "dependencies": ["task_009", "task_013"],
+      "estimated_hours": 24,
+      "complexity": "expert",
+      "agent_type": "dev_agent"
+    },
+    {
+      "id": "task_015",
+      "title": "Dev: API for User Registration & Login",
+      "description": "Develop and expose the public API endpoints for user registration, login, and logout based on the API contract. - Acceptance Criteria: Endpoints `/api/auth/register` and `/api/auth/login` are functional and conform to the API spec.",
+      "priority": 8,
+      "dependencies": ["task_007", "task_014"],
+      "estimated_hours": 8,
+      "complexity": "medium",
+      "agent_type": "dev_agent"
+    },
+    {
+      "id": "task_016",
+      "title": "Dev: Frontend Registration & Login Pages",
+      "description": "Build the UI components for the registration and login forms according to the final design. - Acceptance Criteria: Registration and Login pages are pixel-perfect based on the design system. Forms have client-side validation.",
+      "priority": 8,
+      "dependencies": ["task_012"],
+      "estimated_hours": 16,
+      "complexity": "medium",
+      "agent_type": "dev_agent"
+    },
+    {
+      "id": "task_017",
+      "title": "Dev: Frontend State Management for Auth",
+      "description": "Implement state management logic (e.g., Redux, Zustand) to handle user authentication state, including JWT storage. - Acceptance Criteria: User auth status and token are managed in a global store. App state persists across page reloads.",
+      "priority": 8,
+      "dependencies": ["task_016"],
+      "estimated_hours": 12,
+      "complexity": "complex",
+      "agent_type": "dev_agent"
+    },
+    {
+      "id": "task_018",
+      "title": "Dev: Integrate Frontend Auth with API",
+      "description": "Connect the frontend forms and state management to the backend authentication APIs. Implement protected routes. - Acceptance Criteria: Users can successfully register and log in via the UI. Certain routes are inaccessible to unauthenticated users.",
+      "priority": 8,
+      "dependencies": ["task_015", "task_017"],
+      "estimated_hours": 8,
+      "complexity": "medium",
+      "agent_type": "dev_agent"
+    },
+    {
+      "id": "task_019",
+      "title": "Dev: Backend Product & Category APIs (CRUD)",
+      "description": "Implement the backend models and CRUD API endpoints for managing products and categories. - Acceptance Criteria: Endpoints for creating, reading, updating, and deleting products/categories are functional. Only admin roles can perform C/U/D operations.",
+      "priority": 8,
+      "dependencies": ["task_014"],
+      "estimated_hours": 24,
+      "complexity": "medium",
+      "agent_type": "dev_agent"
+    },
+    {
+      "id": "task_020",
+      "title": "Dev: API for Product Listing, Search & Filter",
+      "description": "Develop the public API endpoint for fetching a list of products, with support for pagination, searching, and filtering by category/price. - Acceptance Criteria: `/api/products` endpoint returns paginated results. Query parameters for search and filter work correctly.",
+      "priority": 8,
+      "dependencies": ["task_019"],
+      "estimated_hours": 16,
+      "complexity": "complex",
+      "agent_type": "dev_agent"
+    },
+    {
+      "id": "task_021",
+      "title": "Dev: Frontend Product Listing Component",
+      "description": "Build the UI components for displaying products in a grid or list, including search and filter controls. - Acceptance Criteria: Product list page and components match the UI design. Filter and search UI elements are functional.",
+      "priority": 8,
+      "dependencies": ["task_012"],
+      "estimated_hours": 20,
+      "complexity": "medium",
+      "agent_type": "dev_agent"
+    },
+    {
+      "id": "task_022",
+      "title": "Dev: Frontend Product Detail Page Component",
+      "description": "Build the UI component for the product detail page, showing images, description, price, and an 'Add to Cart' button. - Acceptance Criteria: Product detail page renders correctly with dynamic data. 'Add to Cart' button is present.",
+      "priority": 8,
+      "dependencies": ["task_012"],
+      "estimated_hours": 12,
+      "complexity": "medium",
+      "agent_type": "dev_agent"
+    },
+    {
+      "id": "task_023",
+      "title": "Dev: Integrate Product Pages with APIs",
+      "description": "Connect the frontend product listing and detail pages to the backend product APIs to fetch and display live data. - Acceptance Criteria: Product list page populates from the backend. Search and filtering works end-to-end. Product detail pages show correct data.",
+      "priority": 8,
+      "dependencies": ["task_020", "task_021", "task_022"],
+      "estimated_hours": 12,
+      "complexity": "medium",
+      "agent_type": "dev_agent"
+    },
+    {
+      "id": "task_024",
+      "title": "Dev: Backend Shopping Cart APIs",
+      "description": "Implement the backend logic and APIs for adding, updating, and viewing items in a user's shopping cart. - Acceptance Criteria: Authenticated users can add items to a cart. Cart contents are persisted between sessions. API endpoints for cart management are functional.",
+      "priority": 8,
+      "dependencies": ["task_014", "task_019"],
+      "estimated_hours": 16,
+      "complexity": "complex",
+      "agent_type": "dev_agent"
+    },
+    {
+      "id": "task_025",
+      "title": "Dev: Backend Order & Checkout Logic/APIs",
+      "description": "Implement the backend logic to convert a cart into an order, calculate totals, and record shipping information. - Acceptance Criteria: An API endpoint exists to create an order from a cart. Order data is saved correctly in the database.",
+      "priority": 10,
+      "dependencies": ["task_024"],
+      "estimated_hours": 20,
+      "complexity": "complex",
+      "agent_type": "dev_agent"
+    },
+    {
+      "id": "task_026",
+      "title": "Dev: Payment Gateway Integration (Stripe)",
+      "description": "Integrate a third-party payment provider like Stripe to handle payment processing during checkout. - Acceptance Criteria: A successful payment intent from Stripe can be created. The order status is updated upon successful payment confirmation.",
+      "priority": 10,
+      "dependencies": ["task_025"],
+      "estimated_hours": 24,
+      "complexity": "expert",
+      "agent_type": "dev_agent"
+    },
+    {
+      "id": "task_027",
+      "title": "Dev: Frontend Shopping Cart Component",
+      "description": "Build the UI for the shopping cart page/modal, allowing users to view items, update quantities, and proceed to checkout. - Acceptance Criteria: Cart UI matches the design. Quantity changes and item removals are reflected in the UI state.",
+      "priority": 8,
+      "dependencies": ["task_012", "task_024"],
+      "estimated_hours": 12,
+      "complexity": "medium",
+      "agent_type": "dev_agent"
+    },
+    {
+      "id": "task_028",
+      "title": "Dev: Frontend Checkout Flow UI",
+      "description": "Build the multi-step checkout UI for collecting shipping address and payment information. - Acceptance Criteria: Checkout UI components for address and payment are built. The UI securely handles payment elements from the provider (e.g., Stripe Elements).",
+      "priority": 8,
+      "dependencies": ["task_012", "task_026"],
+      "estimated_hours": 24,
+      "complexity": "complex",
+      "agent_type": "dev_agent"
+    },
+    {
+      "id": "task_029",
+      "title": "Dev: Integrate Full Checkout Flow",
+      "description": "Connect the frontend cart and checkout flow to the backend APIs, including the final payment submission. - Acceptance Criteria: Users can go from 'Add to Cart' to a successful payment confirmation. An order is created and visible in the user's order history.",
+      "priority": 8,
+      "dependencies": ["task_026", "task_027", "task_028"],
+      "estimated_hours": 16,
+      "complexity": "complex",
+      "agent_type": "dev_agent"
+    },
+    {
+      "id": "task_030",
+      "title": "Dev: Backend for Admin Product Management",
+      "description": "Create secure API endpoints for admin users to manage products and categories. - Acceptance Criteria: Admin users can perform all CRUD operations on products via the API. Non-admin users receive a 403 Forbidden error.",
+      "priority": 5,
+      "dependencies": ["task_019"],
+      "estimated_hours": 8,
+      "complexity": "medium",
+      "agent_type": "dev_agent"
+    },
+    {
+      "id": "task_031",
+      "title": "Dev: Backend for Admin Order Management",
+      "description": "Create secure API endpoints for admin users to view all orders and update their status (e.g., 'shipped'). - Acceptance Criteria: Admin users can list all orders and update an order's status. Non-admin users cannot access these endpoints.",
+      "priority": 5,
+      "dependencies": ["task_025"],
+      "estimated_hours": 8,
+      "complexity": "medium",
+      "agent_type": "dev_agent"
+    },
+    {
+      "id": "task_032",
+      "title": "Dev: Frontend for Admin Dashboard",
+      "description": "Build the UI for a simple admin dashboard for product and order management. - Acceptance Criteria: A new section in the frontend is available for admins. UI tables and forms for managing products and orders are functional.",
+      "priority": 5,
+      "dependencies": ["task_018", "task_030", "task_031"],
+      "estimated_hours": 32,
+      "complexity": "complex",
+      "agent_type": "dev_agent"
+    },
+    {
+      "id": "task_033",
+      "title": "QA: Unit Test Plan & Framework Setup",
+      "description": "Configure unit testing frameworks (e.g., Jest, PyTest) for both frontend and backend projects. Define the unit testing strategy. - Acceptance Criteria: Unit tests can be run via a single command in both repos. A code coverage tool is configured.",
+      "priority": 8,
+      "dependencies": ["task_011", "task_012"],
+      "estimated_hours": 8,
+      "complexity": "medium",
+      "agent_type": "qa_agent"
+    },
+    {
+      "id": "task_034",
+      "title": "QA: Unit Tests for Authentication Backend",
+      "description": "Write unit tests for all authentication logic, including user model, password hashing, and JWT generation. - Acceptance Criteria: Test coverage for auth-related files is above 80%. All critical logic paths are tested.",
+      "priority": 10,
+      "dependencies": ["task_015", "task_033"],
+      "estimated_hours": 16,
+      "complexity": "medium",
+      "agent_type": "qa_agent"
+    },
+    {
+      "id": "task_035",
+      "title": "QA: Unit Tests for Product & Catalog Backend",
+      "description": "Write unit tests for the product and category models, services, and controller logic. - Acceptance Criteria: Test coverage for product/catalog files is above 80%. Tests for search and filter logic are included.",
+      "priority": 8,
+      "dependencies": ["task_020", "task_033"],
+      "estimated_hours": 12,
+      "complexity": "medium",
+      "agent_type": "qa_agent"
+    },
+    {
+      "id": "task_036",
+      "title": "QA: Unit Tests for Cart & Order Backend",
+      "description": "Write unit tests for the complex business logic in the cart and order services. - Acceptance Criteria: Test coverage for cart/order files is above 80%. Edge cases like out-of-stock items are tested.",
+      "priority": 8,
+      "dependencies": ["task_026", "task_033"],
+      "estimated_hours": 20,
+      "complexity": "complex",
+      "agent_type": "qa_agent"
+    },
+    {
+      "id": "task_037",
+      "title": "QA: Integration Testing: Auth Flow",
+      "description": "Perform integration tests on the complete user authentication flow, from UI to database. - Acceptance Criteria: A test plan for the auth flow is executed. Bugs are logged. The flow works as expected across frontend and backend.",
+      "priority": 8,
+      "dependencies": ["task_018"],
+      "estimated_hours": 8,
+      "complexity": "medium",
+      "agent_type": "qa_agent"
+    },
+    {
+      "id": "task_038",
+      "title": "QA: Integration Testing: Product Browsing",
+      "description": "Perform integration tests on the product browsing, searching, and filtering functionality. - Acceptance Criteria: A test plan for product browsing is executed. The UI correctly reflects data and filtering from the backend.",
+      "priority": 8,
+      "dependencies": ["task_023"],
+      "estimated_hours": 8,
+      "complexity": "medium",
+      "agent_type": "qa_agent"
+    },
+    {
+      "id": "task_039",
+      "title": "QA: Integration Testing: Full Checkout Flow",
+      "description": "Perform integration tests on the end-to-end checkout flow, including adding to cart, entering details, and mock payment. - Acceptance Criteria: A test plan for the full checkout flow is executed. An order can be successfully placed.",
+      "priority": 10,
+      "dependencies": ["task_029"],
+      "estimated_hours": 16,
+      "complexity": "complex",
+      "agent_type": "qa_agent"
+    },
+    {
+      "id": "task_040",
+      "title": "QA: End-to-End System Testing",
+      "description": "Conduct comprehensive E2E testing of the entire application, simulating real user scenarios. - Acceptance Criteria: An E2E test suite (e.g., using Cypress) is run successfully against a staging environment. All major user flows are verified.",
+      "priority": 8,
+      "dependencies": ["task_032", "task_039"],
+      "estimated_hours": 24,
+      "complexity": "complex",
+      "agent_type": "qa_agent"
+    },
+    {
+      "id": "task_041",
+      "title": "QA: Performance & Load Testing",
+      "description": "Use tools like k6 or JMeter to test the application's performance under expected and high load. - Acceptance Criteria: A performance test report is generated. API response times are within acceptable limits under load. No critical bottlenecks are found.",
+      "priority": 5,
+      "dependencies": ["task_040"],
+      "estimated_hours": 16,
+      "complexity": "expert",
+      "agent_type": "qa_agent"
+    },
+    {
+      "id": "task_042",
+      "title": "QA: Security Testing",
+      "description": "Conduct vulnerability scanning and penetration testing to identify and fix security weaknesses. - Acceptance Criteria: A security audit report is generated. All critical and high-severity vulnerabilities are patched.",
+      "priority": 10,
+      "dependencies": ["task_040", "task_009"],
+      "estimated_hours": 32,
+      "complexity": "expert",
+      "agent_type": "qa_agent"
+    },
+    {
+      "id": "task_043",
+      "title": "QA: User Acceptance Testing (UAT)",
+      "description": "Facilitate UAT with stakeholders to ensure the application meets their requirements and expectations. - Acceptance Criteria: UAT is completed. Stakeholders provide sign-off for the release. Feedback is documented and addressed.",
+      "priority": 8,
+      "dependencies": ["task_040"],
+      "estimated_hours": 24,
+      "complexity": "medium",
+      "agent_type": "qa_agent"
+    },
+    {
+      "id": "task_044",
+      "title": "Ops: Dev & Staging Environment Setup",
+      "description": "Set up and configure the development and staging environments using Docker and Docker Compose for consistency. - Acceptance Criteria: Developers can run the entire stack locally with one command. A staging environment mirroring production is available.",
+      "priority": 8,
+      "dependencies": ["task_005"],
+      "estimated_hours": 24,
+      "complexity": "medium",
+      "agent_type": "ops_agent"
+    },
+    {
+      "id": "task_045",
+      "title": "Ops: CI/CD Pipeline Setup (Build & Test)",
+      "description": "Implement a CI pipeline (e.g., GitHub Actions) that automatically builds, lints, and runs tests on every push. - Acceptance Criteria: The CI pipeline triggers on pull requests. Build failures or test failures block merging.",
+      "priority": 8,
+      "dependencies": ["task_033", "task_044"],
+      "estimated_hours": 24,
+      "complexity": "complex",
+      "agent_type": "ops_agent"
+    },
+    {
+      "id": "task_046",
+      "title": "Ops: Production Infrastructure Provisioning (IaC)",
+      "description": "Use Infrastructure as Code (e.g., Terraform, CloudFormation) to provision all production resources (VPC, database, compute, etc.). - Acceptance Criteria: All infrastructure is defined in code. The production environment can be created and destroyed automatically.",
+      "priority": 10,
+      "dependencies": ["task_005"],
+      "estimated_hours": 32,
+      "complexity": "expert",
+      "agent_type": "ops_agent"
+    },
+    {
+      "id": "task_047",
+      "title": "Ops: Configure CD for Staging & Production",
+      "description": "Extend the CI/CD pipeline to automatically deploy to the staging environment and enable manual deployment to production. - Acceptance Criteria: Merges to the main branch are automatically deployed to staging. A manual trigger exists for production deployment.",
+      "priority": 8,
+      "dependencies": ["task_045", "task_046"],
+      "estimated_hours": 16,
+      "complexity": "complex",
+      "agent_type": "ops_agent"
+    },
+    {
+      "id": "task_048",
+      "title": "Ops: Monitoring & Logging Setup",
+      "description": "Integrate monitoring (e.g., Prometheus, Datadog) and centralized logging (e.g., ELK Stack, CloudWatch Logs) solutions. - Acceptance Criteria: Application and system metrics are collected in a dashboard. Logs from all services are aggregated and searchable. Alerts are configured for critical errors.",
+      "priority": 8,
+      "dependencies": ["task_046"],
+      "estimated_hours": 24,
+      "complexity": "complex",
+      "agent_type": "ops_agent"
+    },
+    {
+      "id": "task_049",
+      "title": "Ops: Database Backup & Recovery Plan",
+      "description": "Configure automated daily backups for the production database and document the disaster recovery procedure. - Acceptance Criteria: Automated backups are enabled and verified. A recovery plan is documented and tested.",
+      "priority": 10,
+      "dependencies": ["task_046"],
+      "estimated_hours": 8,
+      "complexity": "medium",
+      "agent_type": "ops_agent"
+    },
+    {
+      "id": "task_050",
+      "title": "Ops: Pre-Launch Production Deployment Dry-Run",
+      "description": "Perform a full deployment to the production environment to ensure all configurations and processes work as expected. - Acceptance Criteria: The application is deployed to production and is accessible internally. All systems are verified as green.",
+      "priority": 10,
+      "dependencies": ["task_043", "task_047", "task_048", "task_049"],
+      "estimated_hours": 8,
+      "complexity": "medium",
+      "agent_type": "ops_agent"
+    },
+    {
+      "id": "task_051",
+      "title": "Ops: Final Production Deployment (Go-Live)",
+      "description": "Execute the final production deployment and make the application available to the public. - Acceptance Criteria: The application is live. The team is monitoring system health closely post-launch.",
+      "priority": 10,
+      "dependencies": ["task_050"],
+      "estimated_hours": 4,
+      "complexity": "medium",
+      "agent_type": "ops_agent"
+    },
+    {
+      "id": "task_052",
+      "title": "Ops: Post-Launch Monitoring & Support Plan",
+      "description": "Establish an on-call rotation and support plan for handling post-launch issues. - Acceptance Criteria: An on-call schedule is created. An incident response plan is documented and shared with the team.",
+      "priority": 8,
+      "dependencies": ["task_051"],
+      "estimated_hours": 8,
+      "complexity": "simple",
+      "agent_type": "ops_agent"
+    },
+    {
+      "id": "task_053",
+      "title": "Documentation: Technical & User Documentation",
+      "description": "Consolidate and finalize all technical documentation (architecture, API) and create user-facing help guides. - Acceptance Criteria: A comprehensive knowledge base for developers is complete. User help documentation for the MVP is published.",
+      "priority": 1,
+      "dependencies": ["task_043"],
+      "estimated_hours": 24,
+      "complexity": "medium",
+      "agent_type": "dev_agent"
+    }
+  ]
+}
+```
